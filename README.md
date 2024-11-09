@@ -1,27 +1,123 @@
-# LogicGate
+# Logic Pulse - Interactive Logic Gate Learning Portal
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
+Logic Pulse is an open-source educational platform designed to teach digital logic fundamentals through interactive tutorials, challenges, and a visual circuit simulator. Built with Angular 18, it provides an engaging learning experience for students and enthusiasts exploring the world of logic gates and digital circuits.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### 🎓 Interactive Tutorials
+- Comprehensive lessons on logic gate fundamentals (AND, OR, NOT gates)
+- Visual representations with truth tables
+- Step-by-step progression through digital logic concepts
+- Interactive lesson content with images and examples
 
-## Code scaffolding
+### 🎯 Challenges System
+- Multiple difficulty levels (Easy, Medium, Hard)
+- Various question types:
+  - Multiple choice questions
+  - Text-based answers
+  - Interactive canvas tasks for circuit design
+- Progress tracking with level completion
+- Configurable question size and types
+- Real-time feedback on answers
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 🔧 Circuit Simulator
+- Drag-and-drop visual circuit designer
+- Interactive logic gate components powered by Konva.js
+- Real-time circuit evaluation
+- Support for:
+  - AND gates
+  - OR gates
+  - NOT gates
+  - Input switches
+  - Output indicators (bulbs)
+  - Circuit connections
+- Visual feedback for circuit states
 
-## Build
+### 🎨 Additional Features
+- Responsive design with mobile/tablet warnings
+- User authentication system
+- Progress persistence with cookies
+- Confetti celebrations on level completion
+- Claude AI integration for enhanced learning assistance
+- Customizable settings
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Technology Stack
 
-## Running unit tests
+- **Frontend Framework**: Angular 18
+- **UI Components**: Angular Material, Bootstrap 5, ng-bootstrap
+- **Canvas Graphics**: Konva.js for circuit simulation
+- **Styling**: CSS with responsive design
+- **State Management**: RxJS
+- **Authentication**: Cookie-based session management
+- **AI Integration**: Anthropic Claude SDK
+- **Build Tools**: Angular CLI, Custom Webpack configuration
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Getting Started
 
-## Running end-to-end tests
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn package manager
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Installation
 
-## Further help
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/logic-pulse-project.git
+cd logic-pulse-project
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm start
+```
+
+4. Navigate to `http://localhost:4200/` in your browser
+
+### Available Scripts
+
+- `npm start` - Run development server
+- `npm run build` - Build for production
+- `npm test` - Run unit tests
+- `npm run test-coverage` - Run tests with coverage report
+
+## Project Structure
+
+```
+logic-pulse-project/
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── challenges/      # Challenge components
+│   │   │   ├── simulator/       # Circuit simulator
+│   │   │   ├── tutorials/       # Tutorial system
+│   │   │   └── ...
+│   │   ├── models/             # Data models and Konva shapes
+│   │   ├── services/           # Angular services
+│   │   └── ...
+│   └── ...
+├── public/
+│   ├── images/                 # Gate images and assets
+│   ├── lessons.json           # Tutorial content
+│   └── questions.json         # Challenge questions
+└── ...
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- Built with Angular 18 and the Angular ecosystem
+- Uses Konva.js for interactive canvas graphics
+- Includes Bootstrap for responsive design
+- Integrates with Anthropic's Claude AI for enhanced learning features
