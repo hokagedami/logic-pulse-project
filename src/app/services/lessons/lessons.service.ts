@@ -30,4 +30,35 @@ export class LessonsService {
     this.loadLessons();
     return this.lessons.map(l => l.code);
   }
+
+  getCurrentLessonIndex(code: string): number {
+    this.loadLessons();
+    return this.lessons.findIndex(l => l.code === code);
+  }
+
+  getNextLesson(currentCode: string): Lesson | null {
+    this.loadLessons();
+    const currentIndex = this.getCurrentLessonIndex(currentCode);
+    if (currentIndex >= 0 && currentIndex < this.lessons.length - 1) {
+      return this.lessons[currentIndex + 1];
+    }
+    return null;
+  }
+
+  getPreviousLesson(currentCode: string): Lesson | null {
+    this.loadLessons();
+    const currentIndex = this.getCurrentLessonIndex(currentCode);
+    if (currentIndex > 0) {
+      return this.lessons[currentIndex - 1];
+    }
+    return null;
+  }
+
+  hasNextLesson(currentCode: string): boolean {
+    return this.getNextLesson(currentCode) !== null;
+  }
+
+  hasPreviousLesson(currentCode: string): boolean {
+    return this.getPreviousLesson(currentCode) !== null;
+  }
 }
