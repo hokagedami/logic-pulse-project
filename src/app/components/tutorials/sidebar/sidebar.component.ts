@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {LessonsService} from "../../../services/lessons/lessons.service";
 import {Lesson} from "../../../models/lesson.model";
@@ -16,13 +16,18 @@ import {NgForOf} from "@angular/common";
 })
 export class SidebarComponent {
   lessons: Lesson[] = [];
-
+  @Input() currentLessonCode: string = '';
+  @Output() lessonCodeChange =  new EventEmitter<string>();
 
   constructor(private lessonService: LessonsService) {
     this.lessons = this.lessonService.getLessons();
   }
-  @Output() lessonCodeChange =  new EventEmitter<string>();
+  
   navigate(code: string) {
     this.lessonCodeChange.emit(code);
+  }
+
+  isActive(code: string): boolean {
+    return this.currentLessonCode === code;
   }
 }

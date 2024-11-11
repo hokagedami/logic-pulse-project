@@ -1,9 +1,14 @@
-<div class="bg-dark text-white p-3">
-  <h3>Lessons</h3>
+<div class="sidebar-container">
+  <div class="sidebar-header">
+    <h3 class="sidebar-title">Lessons</h3>
+  </div>
   <div class="scrollable-list">
     <ul class="lessons">
-      <li *ngFor="let lesson of lessons">
-        <button class="btn btn-link text-white" (click)="navigate(lesson.code)">
+      <li *ngFor="let lesson of lessons; let i = index">
+        <button class="lesson-btn" 
+                [class.active]="isActive(lesson.code)"
+                (click)="navigate(lesson.code)">
+          <span class="lesson-number">{{i + 1}}</span>
           {{lesson.title}}
         </button>
       </li>

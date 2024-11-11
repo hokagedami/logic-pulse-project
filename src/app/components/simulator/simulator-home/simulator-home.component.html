@@ -1,46 +1,92 @@
-<div class="d-flex h-100">
-  <aside class="sidebar guide-container bg-dark-subtle w-25" *ngIf="!isOnSmallScreen">
-    <h3 class="text-white p-3">Guide</h3>
-    <hr class="text-white">
-    <ul class="list-group text-justify">
-      <li class="list-group-item text-white">
-        The toolbar contains the gates and inputs that can be used to build a circuit.
-      </li>
-      <li class="list-group-item text-white">
-        Click on a gate to add it to the center canvas. Ensure the center of the canvas does not have any gates.
-      </li>
-      <li class="list-group-item text-white">
-        Right-click on a gate to remove it from the canvas.
-      </li>
-      <li class="list-group-item text-white">
-        The gates are draggable and can be connected to other gates when on the canvas.
-      </li>
-      <li class="list-group-item text-white">
-        The gates can be connected to each other by clicking on the connector gate placed before the reset button,
-        which turns yellow to show the connector is active.
-        Then click on the input/output circle of a gate to begin connecting and click on the input/output circle of another gate to complete the connection.
-        The connection line will be drawn between the two gates, and the input/output circles will turn red to show the connection is successful.
-      </li>
-      <li class="list-group-item text-white">
-        The canvas can be reset by clicking the reset button.
-      </li>
-    </ul>
-  </aside>
-  <main class="main-content">
-    <div class="alert alert-danger text-center" role="alert"  *ngIf="isOnSmallScreen">
-      This simulator is not available on small screens. Please use a larger screen or a computer.
+<div class="simulator-container">
+  <aside class="sidebar" *ngIf="!isOnSmallScreen">
+    <div class="sidebar-header">
+      <h3 class="sidebar-title">📋 Quick Guide</h3>
     </div>
-    <app-simulator-canvas *ngIf="!isOnSmallScreen" class="row" (connectionsEvent)=handleConnectionsChange($event) (sampleCircuitBtnActiveEvent)=handleSampleCircuitBtnActiveChange($event) [canvasWidth]="800" [canvasHeight]="600"></app-simulator-canvas>
-      <hr *ngIf="!isOnSmallScreen">
-    <div class="container text-center" *ngIf="!isOnSmallScreen">
-      <div class="d-flex justify-content-evenly">
-        <button class="btn btn-outline-secondary" (click)="checkCircuit()" [disabled]="checkCircuitBtnDisabled">Check Circuit</button>
-        <button class="btn btn-outline-secondary" (click)="createSampleCircuit()" [disabled]="sampleCircuitBtnActive">Create Sample Circuit</button>
-        <button class="btn btn-outline-secondary" (click)="takeSnapshot()">Take Snapshot</button>
+    <div class="guide-content">
+      <div class="guide-section">
+        <h4 class="guide-section-title">Getting Started</h4>
+        <ul class="guide-list">
+          <li class="guide-item">
+            <span class="guide-icon">🔧</span>
+            <span class="guide-text">Use the toolbar to select gates and inputs for your circuit</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon">➕</span>
+            <span class="guide-text">Click on a gate to add it to the canvas</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon">🗑️</span>
+            <span class="guide-text">Right-click on a gate to remove it</span>
+          </li>
+        </ul>
       </div>
-      <hr>
+      
+      <div class="guide-section">
+        <h4 class="guide-section-title">Connecting Gates</h4>
+        <ul class="guide-list">
+          <li class="guide-item">
+            <span class="guide-icon">🔗</span>
+            <span class="guide-text">Gates can be dragged and connected to each other</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon">🟡</span>
+            <span class="guide-text">Click the connector tool (turns yellow when active)</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon">🔴</span>
+            <span class="guide-text">Click input/output circles to create connections</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h4 class="guide-section-title">Controls</h4>
+        <ul class="guide-list">
+          <li class="guide-item">
+            <span class="guide-icon">🔄</span>
+            <span class="guide-text">Use the reset button to clear the canvas</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="alert alert-warning text-center" role="alert" *ngIf="isOnSmallScreen">
+      <strong>📱 Screen Size Notice</strong><br>
+      This simulator requires a larger screen for the best experience. Please use a desktop or tablet.
+    </div>
+
+    <div class="simulator-workspace" *ngIf="!isOnSmallScreen">
+      <app-simulator-canvas 
+        (connectionsEvent)="handleConnectionsChange($event)" 
+        (sampleCircuitBtnActiveEvent)="handleSampleCircuitBtnActiveChange($event)" 
+        [canvasWidth]="800" 
+        [canvasHeight]="600">
+      </app-simulator-canvas>
+      
+      <div class="simulator-controls">
+        <div class="controls-container">
+          <button class="control-btn primary" 
+                  (click)="checkCircuit()" 
+                  [disabled]="checkCircuitBtnDisabled">
+            <span class="btn-icon">✓</span>
+            Check Circuit
+          </button>
+          <button class="control-btn secondary" 
+                  (click)="createSampleCircuit()" 
+                  [disabled]="sampleCircuitBtnActive">
+            <span class="btn-icon">🔧</span>
+            Sample Circuit
+          </button>
+          <button class="control-btn secondary" 
+                  (click)="takeSnapshot()">
+            <span class="btn-icon">📷</span>
+            Take Snapshot
+          </button>
+        </div>
+      </div>
     </div>
   </main>
-</div>
-<div class="d-flex justify-content-center align-content-center h-100">
 </div>

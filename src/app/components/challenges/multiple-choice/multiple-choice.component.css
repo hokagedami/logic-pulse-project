@@ -1,22 +1,134 @@
+.question-container {
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-2xl);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.question-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.question-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-md);
+}
+
+.question-text {
+  font-size: 1.125rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.options-container {
+  margin: var(--spacing-xl) 0;
+}
+
+.option-wrapper {
+  margin-bottom: var(--spacing-md);
+}
+
 .btn-check {
   display: none;
 }
 
-.btn {
-  margin: 5px;
+.option-btn {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: left;
+  background-color: var(--gray-50);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  color: var(--gray-800);
+  font-weight: 500;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
-.btn-primary {
-  background-color: blue;
+.option-btn:hover {
+  background-color: var(--gray-100);
+  border-color: var(--gray-300);
+  transform: translateX(4px);
+}
+
+.btn-check:checked + .option-btn {
+  background-color: var(--primary-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.option-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.btn-check:checked + .option-btn .option-letter {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   color: white;
 }
 
-.btn-secondary {
-  background-color: gray;
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--gray-200);
+}
+
+.btn-submit {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-submit:disabled {
+  background-color: var(--gray-300);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.feedback {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+
+.feedback.correct {
+  background-color: var(--success-color);
   color: white;
 }
 
-.btn-check:checked + .btn {
-  background-color: #007bff;
+.feedback.incorrect {
+  background-color: var(--danger-color);
   color: white;
 }

@@ -1,13 +1,57 @@
 <div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
-    <h2>Login</h2>
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username" formControlName="username" required>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">
+          🔐
+        </div>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Enter your credentials to continue your learning journey</p>
+      </div>
 
-      <label for="password" *ngIf="isAdmin">Password:</label>
-      <input *ngIf="isAdmin" type="password" id="password" formControlName="password" required>
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            class="form-input" 
+            formControlName="username" 
+            placeholder="Enter your username"
+            required>
+          <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            Username is required
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="isAdmin">
+          <label for="password" class="form-label">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            required>
+          <div class="error-message" *ngIf="isAdmin && loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Password is required
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="login-button" 
+          [disabled]="!loginForm.valid">
+          🚀 Start Your Journey
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p class="login-footer-text">
+          New to Logic Pulse? 
+          <a href="#" class="login-footer-link">Learn more about digital logic</a>
+        </p>
+      </div>
     </div>
-    <button type="submit" [disabled]="!loginForm.valid">Start Challenge</button>
-  </form>
+  </div>
 </div>

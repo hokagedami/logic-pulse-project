@@ -1,71 +1,130 @@
-.bg-dark {
-  background-color: #343a40 !important;
+.sidebar-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: white;
 }
 
-.lessons {
-  list-style-type: none;
-  padding: 0;
+.sidebar-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-200);
 }
 
-.lessons li {
-  margin-bottom: 15px;
-}
-
-.lessons button {
-  width: 100%;
-  text-align: left;
-  white-space: normal;
-  word-wrap: break-word;
+.sidebar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
 }
 
 .scrollable-list {
   flex: 1;
   overflow-y: auto;
+  padding: var(--spacing-md);
 }
 
-/* Optional scrollbar styling */
+.lessons {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lessons li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.lesson-btn {
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background-color: transparent;
+  color: var(--gray-700);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.lesson-btn:hover {
+  background-color: var(--gray-100);
+  color: var(--primary-color);
+  transform: translateX(4px);
+}
+
+.lesson-btn.active {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.lesson-btn.active::before {
+  content: '';
+  width: 3px;
+  height: 100%;
+  background-color: var(--primary-color);
+  position: absolute;
+  left: 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.lesson-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.lesson-btn:hover .lesson-number,
+.lesson-btn.active .lesson-number {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Scrollbar styling */
 .scrollable-list::-webkit-scrollbar {
   width: 6px;
 }
+
 .scrollable-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
 }
+
 .scrollable-list::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--gray-300);
+  border-radius: var(--radius-sm);
 }
+
 .scrollable-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--gray-400);
 }
 
 @media (max-width: 767px) {
-  .bg-dark {
-    height: auto;
-    max-height: 200px;
-    overflow-y: auto;
+  .sidebar-container {
+    max-height: 250px;
   }
 
-  .lessons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  .sidebar-header {
+    padding: var(--spacing-md);
   }
 
-  .lessons li {
-    width: 48%; /* Adjust as needed */
-    margin-bottom: 10px;
+  .scrollable-list {
+    padding: var(--spacing-sm);
   }
 
-  .lessons button {
-    font-size: 0.9em;
-    padding: 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .lessons li {
-    width: 100%;
+  .lesson-btn {
+    font-size: 0.875rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }

@@ -1,7 +1,18 @@
-<div class="lesson-container">
-    <app-sidebar (lessonCodeChange)="selectedLessonCode = $event" class="sidebar"/>
-    <div class="container-fluid">
-      <lesson-content [code]="selectedLessonCode"/>
+<div class="tutorial-page">
+  <div class="tutorial-container">
+    <div class="lesson-workspace">
+      <app-sidebar
+        (lessonCodeChange)="onLessonChange($event)"
+        [currentLessonCode]="selectedLessonCode"
+        class="tutorial-sidebar"/>
+
+      <div class="lesson-content-wrapper">
+        <lesson-content
+          [code]="selectedLessonCode"
+          (nextLesson)="navigateToNext()"
+          (previousLesson)="navigateToPrevious()"/>
+      </div>
     </div>
+  </div>
 </div>
 
