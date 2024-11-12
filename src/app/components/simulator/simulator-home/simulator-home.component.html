@@ -59,32 +59,39 @@
     </div>
 
     <div class="simulator-workspace" *ngIf="!isOnSmallScreen">
-      <app-simulator-canvas 
-        (connectionsEvent)="handleConnectionsChange($event)" 
-        (sampleCircuitBtnActiveEvent)="handleSampleCircuitBtnActiveChange($event)" 
-        [canvasWidth]="800" 
-        [canvasHeight]="600">
-      </app-simulator-canvas>
-      
-      <div class="simulator-controls">
-        <div class="controls-container">
-          <button class="control-btn primary" 
-                  (click)="checkCircuit()" 
-                  [disabled]="checkCircuitBtnDisabled">
-            <span class="btn-icon">✓</span>
-            Check Circuit
-          </button>
-          <button class="control-btn secondary" 
-                  (click)="createSampleCircuit()" 
-                  [disabled]="sampleCircuitBtnActive">
-            <span class="btn-icon">🔧</span>
-            Sample Circuit
-          </button>
-          <button class="control-btn secondary" 
-                  (click)="takeSnapshot()">
-            <span class="btn-icon">📷</span>
-            Take Snapshot
-          </button>
+      <div class="canvas-and-controls">
+        <div class="canvas-container">
+          <app-simulator-canvas 
+            (connectionsEvent)="handleConnectionsChange($event)" 
+            (sampleCircuitBtnActiveEvent)="handleSampleCircuitBtnActiveChange($event)" 
+            [canvasWidth]="800" 
+            [canvasHeight]="600">
+          </app-simulator-canvas>
+        </div>
+        
+        <div class="simulator-controls">
+          <div class="controls-header">
+            <h3 class="controls-title">⚡ Circuit Controls</h3>
+          </div>
+          <div class="controls-container">
+            <button class="control-btn primary" 
+                    (click)="checkCircuit()" 
+                    [disabled]="checkCircuitBtnDisabled">
+              <span class="btn-icon">✓</span>
+              <span class="btn-text">Check Circuit</span>
+            </button>
+            <button class="control-btn secondary" 
+                    (click)="createSampleCircuit()" 
+                    [disabled]="sampleCircuitBtnActive">
+              <span class="btn-icon">🔧</span>
+              <span class="btn-text">Sample Circuit</span>
+            </button>
+            <button class="control-btn secondary" 
+                    (click)="takeSnapshot()">
+              <span class="btn-icon">📷</span>
+              <span class="btn-text">Take Snapshot</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -17,7 +17,8 @@ describe('SimulatorHomeComponent', () => {
   beforeEach(async () => {
     mockSimulatorCanvasComponent = jasmine.createSpyObj('SimulatorCanvasComponent', [
       'createAndSampleCircuit',
-      'checkCircuit',
+      // 'checkCircuit',
+      'validateCircuitLocally',
       'takeCanvasSnapshot'
     ]);
 
