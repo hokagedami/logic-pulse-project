@@ -263,3 +263,69 @@ a:hover {
   background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-light) 100%);
   min-height: 100vh;
 }
+
+/* Toast notification styles - ensure they appear above fixed header */
+.ngx-toast-alerts-container,
+.toast-container,
+[class*="toast"] {
+  z-index: 1060 !important;
+}
+
+/* Custom toast styling to match design system */
+.ngx-toast-alerts-container .toast-success {
+  background: linear-gradient(135deg, var(--success-color) 0%, var(--success-hover) 100%) !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.ngx-toast-alerts-container .toast-error {
+  background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-hover) 100%) !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.ngx-toast-alerts-container .toast-warning {
+  background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-hover) 100%) !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.ngx-toast-alerts-container .toast-info {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+/* Toast animation improvements */
+.ngx-toast-alerts-container .toast {
+  backdrop-filter: blur(10px) !important;
+  transform: translateX(0) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.ngx-toast-alerts-container .toast.show {
+  animation: slideInRight 0.3s ease-out !important;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

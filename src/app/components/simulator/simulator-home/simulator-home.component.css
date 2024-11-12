@@ -97,35 +97,90 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+}
+
+.canvas-and-controls {
+  display: flex;
+  gap: var(--spacing-xl);
+  flex-grow: 1;
+  align-items: flex-start;
+}
+
+.canvas-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .simulator-controls {
   background-color: white;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  width: 280px;
+  height: fit-content;
+  position: sticky;
+  top: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.controls-header {
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+  color: white;
   padding: var(--spacing-lg);
+}
+
+.controls-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .controls-container {
   display: flex;
-  justify-content: center;
-  gap: var(--spacing-lg);
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
 }
 
 .control-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-xl);
-  border-radius: var(--radius-md);
+  justify-content: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
   font-weight: 600;
   font-size: 1rem;
   transition: all var(--transition-base);
   cursor: pointer;
   border: 2px solid transparent;
   text-decoration: none;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.control-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.control-btn:hover::before {
+  left: 100%;
+}
+
+.btn-text {
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .control-btn:disabled {
@@ -171,6 +226,32 @@
   box-shadow: var(--shadow-sm);
 }
 
+@media (max-width: 1200px) {
+  .canvas-and-controls {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .simulator-controls {
+    width: 100%;
+    position: static;
+  }
+  
+  .controls-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+  
+  .control-btn {
+    flex: 1;
+    min-width: 180px;
+    max-width: 250px;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 1024px) {
   .simulator-container {
     flex-direction: column;
@@ -182,12 +263,8 @@
     position: static;
   }
   
-  .controls-container {
-    gap: var(--spacing-md);
-  }
-  
   .control-btn {
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-md);
     font-size: 0.875rem;
   }
 }
@@ -201,16 +278,23 @@
     padding: var(--spacing-md);
   }
   
-  .sidebar-header {
+  .sidebar-header, .controls-header {
     padding: var(--spacing-md);
   }
   
   .controls-container {
     flex-direction: column;
     align-items: stretch;
+    padding: var(--spacing-md);
   }
   
   .control-btn {
     justify-content: center;
+    min-width: auto;
+    max-width: none;
+  }
+  
+  .canvas-and-controls {
+    gap: var(--spacing-md);
   }
 }
