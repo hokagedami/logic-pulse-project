@@ -734,10 +734,40 @@ export class SimulatorCanvasComponent implements OnInit {
         // find the bulb gate
         const gate = conn.end;
         if (gate instanceof GateBulb) {
-          const bulbFilament = gate.findOne((node: Konva.Line) => node.stroke() === 'red'
-            || node.stroke() === 'green') as Konva.Line;
-          if (bulbFilament) {
-            bulbFilament.stroke(gate.getAttr('outputValue') ? 'green' : 'red');
+          const isOn = gate.getAttr('outputValue');
+          
+          // Update filament color
+          const filamentWire = gate.findOne((node: Konva.Line) => 
+            (node.stroke() === '#ff4444' || node.stroke() === '#ffff44')) as Konva.Line;
+          if (filamentWire) {
+            filamentWire.stroke(isOn ? '#ffff44' : '#ff4444');
+          }
+          
+          // Update bulb glass appearance
+          const bulbGlass = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 255')) as Konva.Ellipse;
+          if (bulbGlass) {
+            bulbGlass.fill(isOn ? 'rgba(255, 255, 200, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+          }
+          
+          // Show/hide glow effects
+          const innerGlow = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 150')) as Konva.Ellipse;
+          if (innerGlow) {
+            innerGlow.visible(isOn);
+          }
+          
+          const outerGlow = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 100')) as Konva.Ellipse;
+          if (outerGlow) {
+            outerGlow.visible(isOn);
+          }
+          
+          // Show/hide light rays
+          const lightRays = gate.findOne((node: Konva.Group) => 
+            node.getChildren().length > 0 && node.getChildren()[0] instanceof Konva.Line) as Konva.Group;
+          if (lightRays) {
+            lightRays.visible(isOn);
           }
         }
       }
