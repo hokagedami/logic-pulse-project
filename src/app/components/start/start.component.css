@@ -1,35 +1,55 @@
 :host {
   display: block;
-  min-height: 100vh;
+  min-height: calc(100vh - 200px);
+  padding: var(--spacing-2xl) 0;
 }
 
 .container-fluid {
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
 }
 
-.welcome-text {
-  font-size: 2rem;
-  font-family: "Roboto", sans-serif;
-  margin: 1.5rem 0 1.5rem 0;
+.hero-section {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-2xl);
 }
 
 .card {
   height: 100%;
-  transition: transform 0.3s ease-in-out;
-  background-color: #cbdfe4;
   border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-slow);
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
 }
 
 .image-container {
   position: relative;
   width: 100%;
-  padding-top: 75%; /* 4:3 aspect ratio */
+  padding-top: 66.67%; /* 3:2 aspect ratio */
   overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--gray-100) 100%);
 }
 
 .card-img-top {
@@ -39,67 +59,122 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
 }
 
 .card-body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 1.25rem;
+  padding: var(--spacing-xl);
 }
 
 .card-title {
   font-size: 1.5rem;
-  margin-bottom: 0.75rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--gray-900);
 }
 
 .card-text {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-lg);
+  flex-grow: 1;
 }
 
-.btn {
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
+.card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--gray-100);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-card {
+  align-self: flex-start;
   font-weight: 600;
-  text-transform: uppercase;
-  border: none;
-  transition: background-color 0.3s ease;
+  text-transform: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
-.btn-tut { background-color: #007bff; color: white; }
-.btn-ch { background-color: #28a745; color: white; }
-.btn-des { background-color: #ffc107; color: black; }
+.btn-card::after {
+  content: '→';
+  transition: transform var(--transition-base);
+}
 
-.btn:hover {
-  opacity: 0.9;
+.btn-card:hover::after {
+  transform: translateX(4px);
+}
+
+.btn-tut { 
+  background-color: var(--primary-color); 
+  color: white; 
+}
+
+.btn-tut:hover {
+  background-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-ch { 
+  background-color: var(--success-color); 
+  color: white; 
+}
+
+.btn-ch:hover {
+  background-color: var(--success-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-des { 
+  background-color: var(--secondary-color); 
+  color: white; 
+}
+
+.btn-des:hover {
+  background-color: var(--secondary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 @media (max-width: 767px) {
-  .welcome-text {
-    font-size: 1.75rem;
+  .hero-title {
+    font-size: 2rem;
   }
 
-  .card {
-    margin-bottom: 1.5rem;
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+
+  .card-body {
+    padding: var(--spacing-lg);
   }
 
   .card-title {
     font-size: 1.25rem;
   }
 
-  .card-text {
-    font-size: 0.9rem;
-  }
-
-  .btn {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
+  .btn-card {
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .welcome-text {
-    font-size: 2.25rem;
+  .hero-title {
+    font-size: 2.5rem;
   }
 }

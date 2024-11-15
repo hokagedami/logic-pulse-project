@@ -34,7 +34,7 @@ export class SimulatorHomeComponent implements OnInit, OnDestroy {
   }
 
   checkCircuit() {
-    this.simulatorCanvasComponent.checkCircuit();
+    this.simulatorCanvasComponent.validateCircuitLocally();
   }
 
   handleConnectionsChange($event: Connection[]): void {

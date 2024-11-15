@@ -1,25 +1,149 @@
-<div class="bg-dark text-white p-3 h-100">
-  <h4>{{currentLesson.title}}</h4>
-  <div class="content">
-    <p *ngFor="let paragraph of currentLesson.content.paragraphs">{{paragraph}}</p>
+<div class="lesson-content">
+  <div class="lesson-header" #lessonTop>
+    <div class="lesson-meta">
+      <span class="lesson-badge">📖 Lesson</span>
+      <span class="lesson-code">{{currentLesson.code}}</span>
+    </div>
+    <h1 class="lesson-title">{{currentLesson.title}}</h1>
   </div>
 
-  <div *ngIf="currentLesson.content.images" class="image-container">
-    <img *ngFor="let image of currentLesson.content.images" [src]="image" alt="Lesson Image" class="img-fluid mb-3 styled-image">
-  </div>
+  <div class="lesson-body">
+    <div class="content-section" *ngIf="currentLesson.content.paragraphs">
+      <div class="content-text">
+        <p *ngFor="let paragraph of currentLesson.content.paragraphs" class="content-paragraph">
+          {{paragraph}}
+        </p>
+      </div>
+    </div>
 
-  <div *ngIf="currentLesson.content.tables" class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead>
-      <tr>
-        <th *ngFor="let header of currentLesson.content.tables[0].columns">{{header}}</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let row of currentLesson.content.tables[0].data">
-        <td *ngFor="let cell of row">{{cell}}</td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="image-section" *ngIf="currentLesson.content.images && currentLesson.content.images.length > 0">
+      <h3 class="section-title">
+        <span class="section-icon">🖼️</span>
+        Visual Guide
+        <span class="image-count">({{currentLesson.content.images.length}} {{currentLesson.content.images.length === 1 ? 'image' : 'images'}})</span>
+      </h3>
+      <div class="image-gallery" [class.single-image]="currentLesson.content.images.length === 1">
+        <div *ngFor="let image of currentLesson.content.images; let i = index" 
+             class="image-container" 
+             [class.featured]="i === 0 && currentLesson.content.images.length > 1">
+          <div class="image-wrapper">
+            <div class="image-loading-placeholder" [class.hidden]="imageLoaded[i]">
+              <div class="loading-spinner"></div>
+              <span class="loading-text">Loading image...</span>
+            </div>
+            <img [src]="image" 
+                 [alt]="'Logic Gate Diagram - Visual Guide ' + (i + 1)"
+                 class="lesson-image"
+                 (load)="onImageLoad(i)"
+                 (error)="onImageError(i)"
+                 [class.loaded]="imageLoaded[i]"
+                 (click)="openImageModal(image, i)">
+            <div class="image-overlay">
+              <div class="image-actions">
+                <button class="action-btn zoom-btn" (click)="openImageModal(image, i)" title="View full size">
+                  <span class="btn-icon">🔍</span>
+                </button>
+                <button class="action-btn info-btn" title="Image details">
+                  <span class="btn-icon">ℹ️</span>
+                </button>
+              </div>
+              <div class="image-caption">
+                <span class="caption-text">Click to enlarge</span>
+              </div>
+            </div>
+          </div>
+          <div class="image-meta">
+            <span class="image-title">Figure {{i + 1}}: Logic Gate Diagram</span>
+            <span class="image-description">Visual representation of the logic gate concepts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" 
+         [class.active]="selectedImage" 
+         (click)="closeImageModal()"
+         *ngIf="selectedImage">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h4 class="modal-title">Figure {{selectedImageIndex + 1}}: Logic Gate Diagram</h4>
+          <button class="modal-close" (click)="closeImageModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <img [src]="selectedImage" alt="Logic Gate Diagram - Full Size" class="modal-image">
+        </div>
+        <div class="modal-footer">
+          <div class="modal-nav" *ngIf="currentLesson.content.images.length > 1">
+            <button class="nav-btn prev" 
+                    [disabled]="selectedImageIndex === 0"
+                    (click)="previousImage()">
+              ← Previous
+            </button>
+            <span class="image-counter">
+              {{selectedImageIndex + 1}} of {{currentLesson.content.images.length}}
+            </span>
+            <button class="nav-btn next" 
+                    [disabled]="selectedImageIndex === currentLesson.content.images.length - 1"
+                    (click)="nextImage()">
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-section" *ngIf="currentLesson.content.tables && currentLesson.content.tables.length > 0">
+      <h3 class="section-title">
+        <span class="section-icon">📊</span>
+        {{currentLesson.content.tables[0].title || 'Reference Table'}}
+      </h3>
+      <div class="table-wrapper">
+        <table class="modern-table">
+          <thead>
+          <tr>
+            <th *ngFor="let header of currentLesson.content.tables[0].columns">
+              {{header}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let row of currentLesson.content.tables[0].data; let i = index" 
+              [class.highlight-row]="i % 2 === 1">
+            <td *ngFor="let cell of row" class="table-cell">
+              <span class="cell-content">{{cell}}</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="lesson-navigation">
+      <div class="nav-info">
+        <div class="lesson-progress">
+          <span class="progress-text">Lesson {{getCurrentLessonNumber()}} of {{getTotalLessons()}}</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" [style.width.%]="(getCurrentLessonNumber() / getTotalLessons()) * 100"></div>
+          </div>
+        </div>
+        <span class="nav-text">Continue your learning journey</span>
+      </div>
+      <div class="nav-actions">
+        <button 
+          class="nav-btn secondary" 
+          [disabled]="!hasPreviousLesson()"
+          (click)="onPreviousLesson()">
+          ← Previous Lesson
+        </button>
+        <button 
+          class="nav-btn primary"
+          [disabled]="!hasNextLesson()"
+          (click)="onNextLesson()">
+          Next Lesson →
+        </button>
+      </div>
+    </div>
   </div>
 </div>

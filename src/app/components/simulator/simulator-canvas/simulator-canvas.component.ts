@@ -156,18 +156,54 @@ export class SimulatorCanvasComponent implements OnInit {
   }
 
   private createToolbarItem(type: string, x: number, y: number, width: number, height: number): void {
+    // Create a container group for each toolbar item
+    const itemContainer = new Konva.Group({
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+    });
+
+    // Add background for the tool item
+    const itemBackground = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: width,
+      height: height,
+      fill: 'transparent',
+      cornerRadius: 12,
+    });
+    itemContainer.add(itemBackground);
+
     switch (type) {
       case 'Connector':
-        const connector = new GateConnector({x, y, _width: width, _height: height, handleClick: this.handleConnectorClick});
-        this.toolbarLayer.add(connector);
+        const connector = new GateConnector({
+          x: width * 0.2,
+          y: height * 0.15,
+          _width: width * 0.6,
+          _height: height * 0.5,
+          handleClick: this.handleConnectorClick
+        });
+        itemContainer.add(connector);
+        itemContainer.setAttr('toolType', 'connector');
         this.selectedTool = 'select';
         break;
       case 'Reset':
-        this.createResetButton(x, y, width, height);
+        this.createResetButtonInContainer(itemContainer, width, height);
+        itemContainer.setAttr('toolType', 'reset');
         break;
       default:
-        this.createGateIcon(type, x, y, width, height);
+        this.createGateIconInContainer(itemContainer, type, width, height);
+        itemContainer.setAttr('toolType', 'gate');
     }
+
+    // Add label
+    this.addToolLabel(itemContainer, type, width, height);
+
+    // Add hover effects
+    this.addToolHoverEffects(itemContainer, itemBackground);
+
+    this.toolbarLayer.add(itemContainer);
   }
 
   private createGateIcon(type: string, x: number, y: number, width: number, height: number): void {
@@ -278,6 +314,130 @@ export class SimulatorCanvasComponent implements OnInit {
       });
 
       this.toolbarLayer.add(imageNode);
+    });
+  }
+
+  private createResetButtonInContainer(container: Konva.Group, width: number, height: number): void {
+    const iconSize = Math.min(width, height) * 0.4;
+    const iconX = (width - iconSize) / 2;
+    const iconY = (height * 0.6 - iconSize) / 2;
+
+    Konva.Image.fromURL("public/images/reset.png", (imageNode) => {
+      imageNode.setAttrs({
+        x: iconX,
+        y: iconY,
+        width: iconSize,
+        height: iconSize,
+        draggable: false,
+      });
+
+      container.on('click', () => {
+        this.canvasLayer.destroyChildren();
+        this.canvasLayer.draw();
+        this.connections = [];
+        this.connectionsEvent.emit(this.connections);
+        this.sampleCircuitBtnActiveEvent.emit(false);
+      });
+
+      container.add(imageNode);
+    });
+  }
+
+  private createGateIconInContainer(container: Konva.Group, type: string, width: number, height: number): void {
+    const iconSize = Math.min(width, height) * 0.4;
+    const iconX = (width - iconSize) / 2;
+    const iconY = (height * 0.6 - iconSize) / 2;
+
+    const properties = {
+      draggable: false,
+      id: `gate-${Date.now()}-${Math.random()}`,
+      isToolbarIcon: true,
+      name: type
+    };
+
+    let gate = this.createIconByType(type, iconX, iconY, properties);
+    gate.scale({ x: iconSize / 50, y: iconSize / 50 });
+
+    container.on('click', () => {
+      if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        this.toast.error('Ensure the connector tool is inactive before adding a new gate');
+        return;
+      }
+
+      const canvasCenterX = this.canvasStage.width() / 2;
+      const canvasCenterY = this.canvasStage.height() / 2;
+      let positionFound = false;
+      let posX = canvasCenterX;
+      let posY = canvasCenterY;
+
+      while (!positionFound) {
+        if (this.isPositionFree(posX, posY)) {
+          positionFound = true;
+        } else {
+          this.toast.error('The center of the canvas is not free. Please move the elements currently at the center to make space for a new one.');
+          return;
+        }
+      }
+
+      const clonedProperties = {
+        draggable: true,
+        id: `cloned-${gate.id()}-${Date.now()}-${Math.random()}`,
+        isToolbarIcon: false,
+        name: type,
+        original: gate.id()
+      };
+      const cloned = this.createIconByType(gate.getAttr('name'), posX, posY, clonedProperties);
+
+      this.canvasLayer.add(cloned);
+      this.handleCanvasGate(cloned);
+      this.canvasStage.batchDraw();
+      this.canvasLayer.fire('add', { target: cloned });
+      this.sampleCircuitBtnActiveEvent.emit(false);
+    });
+
+    container.add(gate);
+  }
+
+  private addToolLabel(container: Konva.Group, type: string, width: number, height: number): void {
+    const label = new Konva.Text({
+      x: 0,
+      y: height * 0.75,
+      width: width,
+      text: type,
+      fontSize: 10,
+      fontFamily: 'Arial, sans-serif',
+      fontStyle: '600',
+      fill: '#374151',
+      align: 'center',
+      letterSpacing: 0.5,
+    });
+
+    container.add(label);
+  }
+
+  private addToolHoverEffects(container: Konva.Group, background: Konva.Rect): void {
+    container.on('mouseenter', () => {
+      background.fill('rgba(255, 255, 255, 0.8)');
+      background.stroke('#2563eb');
+      background.strokeWidth(1);
+      container.to({
+        scaleX: 1.05,
+        scaleY: 1.05,
+        duration: 0.2,
+      });
+      this.toolbarLayer.batchDraw();
+    });
+
+    container.on('mouseleave', () => {
+      background.fill('transparent');
+      background.stroke('');
+      background.strokeWidth(0);
+      container.to({
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.2,
+      });
+      this.toolbarLayer.batchDraw();
     });
   }
 
@@ -524,10 +684,10 @@ export class SimulatorCanvasComponent implements OnInit {
 
   private isCompleteCircuit(): boolean {
     const visited = new Set<Konva.Group>();
-    const stack = [];
+    const stack: (Gate | null)[] = [];
 
     // Find all input gates
-    const inputGates = this.connections
+    const inputGates: (Gate | null)[] = this.connections
       .filter(conn => conn.startCircle)
       .map(conn => conn.start);
 
@@ -549,7 +709,7 @@ export class SimulatorCanvasComponent implements OnInit {
       }
 
       // Add connected gates to stack
-      const connectedGates = this.connections
+      const connectedGates: (Gate | null)[] = this.connections
         .filter(conn => conn.start === currentGate)
         .map(conn => conn.end);
 
@@ -574,10 +734,40 @@ export class SimulatorCanvasComponent implements OnInit {
         // find the bulb gate
         const gate = conn.end;
         if (gate instanceof GateBulb) {
-          const bulbFilament = gate.findOne((node: Konva.Line) => node.stroke() === 'red'
-            || node.stroke() === 'green') as Konva.Line;
-          if (bulbFilament) {
-            bulbFilament.stroke(gate.getAttr('outputValue') ? 'green' : 'red');
+          const isOn = gate.getAttr('outputValue');
+          
+          // Update filament color
+          const filamentWire = gate.findOne((node: Konva.Line) => 
+            (node.stroke() === '#ff4444' || node.stroke() === '#ffff44')) as Konva.Line;
+          if (filamentWire) {
+            filamentWire.stroke(isOn ? '#ffff44' : '#ff4444');
+          }
+          
+          // Update bulb glass appearance
+          const bulbGlass = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 255')) as Konva.Ellipse;
+          if (bulbGlass) {
+            bulbGlass.fill(isOn ? 'rgba(255, 255, 200, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+          }
+          
+          // Show/hide glow effects
+          const innerGlow = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 150')) as Konva.Ellipse;
+          if (innerGlow) {
+            innerGlow.visible(isOn);
+          }
+          
+          const outerGlow = gate.findOne((node: Konva.Ellipse) => 
+            node.fill() && (node.fill() as string).includes('255, 255, 100')) as Konva.Ellipse;
+          if (outerGlow) {
+            outerGlow.visible(isOn);
+          }
+          
+          // Show/hide light rays
+          const lightRays = gate.findOne((node: Konva.Group) => 
+            node.getChildren().length > 0 && node.getChildren()[0] instanceof Konva.Line) as Konva.Group;
+          if (lightRays) {
+            lightRays.visible(isOn);
           }
         }
       }
@@ -623,26 +813,62 @@ export class SimulatorCanvasComponent implements OnInit {
     this.canvasLayer.destroyChildren();
     this.connections = [];
 
-    // Function to create a gate by simulating a click on the toolbar icon
+    // Function to create a gate by simulating a click on the toolbar container
     const createGate = (gateType: string, x: number, y: number): Gate | null => {
-      const toolbarIcon = this.toolbarLayer.findOne(`.${gateType}`) as Gate;
-      if (toolbarIcon) {
-        // Simulate a click on the toolbar icon
-        toolbarIcon.fire('click');
+      try {
+        // Find the toolbar container for this gate type
+        const toolbarContainer = this.toolbarLayer.findOne((node: Konva.Node) => {
+          return node instanceof Konva.Group && node.findOne((child: Konva.Node) => {
+            return child.getAttr && child.getAttr('name') === gateType;
+          });
+        }) as Konva.Group;
+
+        if (!toolbarContainer) {
+          console.error(`No toolbar container found for gate type: ${gateType}`);
+          this.toast.error(`Toolbar not properly initialized for ${gateType}`);
+          return null;
+        }
+
+        // Get initial canvas gate count
+        const initialGateCount = this.canvasLayer.getChildren().length;
+
+        // Simulate a click on the toolbar container
+        toolbarContainer.fire('click');
+
+        // Wait a moment for the gate to be created
+        setTimeout(() => {
+          const currentGateCount = this.canvasLayer.getChildren().length;
+          if (currentGateCount <= initialGateCount) {
+            console.warn(`No new gate was created for type: ${gateType}`);
+          }
+        }, 10);
 
         // Find the newly created gate on the canvas
+        const canvasCenterX = this.canvasStage.width() / 2;
+        const canvasCenterY = this.canvasStage.height() / 2;
+        
         const newGate = this.canvasLayer.findOne((node: Gate) => {
-          const canvasCenterX = this.canvasStage.width() / 2;
-          const canvasCenterY = this.canvasStage.height() / 2;
-          return node.id().startsWith(`cloned-${toolbarIcon.id()}`) && node.getAttr("original") === toolbarIcon.id() && node.x() === canvasCenterX && node.y() === canvasCenterY;
+          return node.x() === canvasCenterX && 
+                 node.y() === canvasCenterY && 
+                 node.getAttr && 
+                 node.getAttr('name') === gateType &&
+                 !node.getAttr('isToolbarIcon');
         }) as Gate;
+        
         if (newGate) {
           // Position the gate
           newGate.position({ x, y });
           this.canvasLayer.batchDraw();
+          console.log(`Successfully created ${gateType} gate at (${x}, ${y})`);
           return newGate;
+        } else {
+          console.error(`Failed to find newly created ${gateType} gate on canvas`);
         }
+      } catch (error) {
+        console.error(`Error creating ${gateType} gate:`, error);
+        this.toast.error(`Error creating ${gateType} gate: ${(error as Error).message}`);
       }
+      
       this.toast.error(`Failed to create ${gateType} gate`);
       return null;
     };
@@ -673,39 +899,65 @@ export class SimulatorCanvasComponent implements OnInit {
         return node.getAttr('circleType') === 'input';
       }) as GateCircle;
 
-      if (one1OutputCircle && one2OutputCircle && andInputCircles && andInputCircles.length == 2 && bulbInputCircle) {
+      if (one1OutputCircle && one2OutputCircle && andInputCircles && andInputCircles.length >= 2 && andOutputCircle && bulbInputCircle) {
+         // Create connections with proper structure
          this.drawConnectionLine(one1OutputCircle, andInputCircles[0] as GateCircle);
-         const connection1 = {
+         const connection1: Connection = {
            start: oneGate1,
-            end: andGate,
-            startCircle: one1OutputCircle,
-            endCircle: andInputCircles[0] as GateCircle
-         }
+           end: andGate,
+           startCircle: one1OutputCircle,
+           endCircle: andInputCircles[0] as GateCircle,
+           outputValue: true
+         };
 
          this.drawConnectionLine(one2OutputCircle, andInputCircles[1] as GateCircle);
-         const connection2 = {
+         const connection2: Connection = {
             start: oneGate2,
             end: andGate,
             startCircle: one2OutputCircle,
-            endCircle: andInputCircles[1] as GateCircle
-         }
+            endCircle: andInputCircles[1] as GateCircle,
+            outputValue: true
+         };
 
          this.drawConnectionLine(andOutputCircle, bulbInputCircle);
-         const connection3 = {
+         const connection3: Connection = {
             start: andGate,
             end: lightBulb,
             startCircle: andOutputCircle,
-            endCircle: bulbInputCircle
+            endCircle: bulbInputCircle,
+            outputValue: true
          };
+
+         // Mark circles as having connections
+         one1OutputCircle.setAttr('HasConnection', true);
+         one2OutputCircle.setAttr('HasConnection', true);
+         (andInputCircles[0] as GateCircle).setAttr('HasConnection', true);
+         (andInputCircles[1] as GateCircle).setAttr('HasConnection', true);
+         andOutputCircle.setAttr('HasConnection', true);
+         bulbInputCircle.setAttr('HasConnection', true);
 
          this.connections.push(connection1, connection2, connection3);
          this.connectionsEvent.emit(this.connections);
 
-        // prevent dragging of the gates
-        andGate.setAttr('draggable', false);
-        oneGate1.setAttr('draggable', false);
-        oneGate2.setAttr('draggable', false);
-        lightBulb.setAttr('draggable', false);
+         // Prevent dragging of the gates
+         andGate.setAttr('draggable', false);
+         oneGate1.setAttr('draggable', false);
+         oneGate2.setAttr('draggable', false);
+         lightBulb.setAttr('draggable', false);
+
+         // Evaluate the circuit
+         this.circuitGraph = new CircuitGraph();
+         this.circuitGraph.buildGraph(this.connections);
+         this.circuitGraph.evaluateCircuit();
+         this.updateVisuals();
+      } else {
+        let errorMsg = 'Failed to find required gate components: ';
+        if (!one1OutputCircle) errorMsg += 'OneGate1 output, ';
+        if (!one2OutputCircle) errorMsg += 'OneGate2 output, ';
+        if (!andInputCircles || andInputCircles.length < 2) errorMsg += 'AND gate inputs, ';
+        if (!andOutputCircle) errorMsg += 'AND gate output, ';
+        if (!bulbInputCircle) errorMsg += 'LightBulb input, ';
+        this.toast.error(errorMsg.slice(0, -2)); // Remove trailing comma and space
       }
     } else {
       this.toast.error('Failed to create all gates');
@@ -746,6 +998,238 @@ export class SimulatorCanvasComponent implements OnInit {
     }
   }
 
+  validateCircuitLocally(): void {
+    if (this.connections.length === 0) {
+      this.toast.error('Please connect some gates first');
+      return;
+    }
+
+    this.isLoading = true;
+
+    try {
+      // Perform comprehensive circuit validation
+      const validationResult = this.performCircuitValidation();
+      
+      if (validationResult.isValid) {
+        this.toast.success(validationResult.message);
+      } else {
+        this.toast.error(validationResult.message);
+      }
+    } catch (error) {
+      this.toast.error('Failed to validate circuit: ' + (error as Error).message);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private performCircuitValidation(): { isValid: boolean; message: string } {
+    // 1. Check if circuit has basic structure
+    if (!this.hasBasicCircuitStructure()) {
+      return { isValid: false, message: 'Circuit must have at least one input and one output gate' };
+    }
+
+    // 2. Check for disconnected components
+    if (!this.isCircuitFullyConnected()) {
+      return { isValid: false, message: 'All gates must be connected in a single circuit' };
+    }
+
+    // 3. Check for circular dependencies
+    if (this.hasCircularDependencies()) {
+      return { isValid: false, message: 'Circuit contains circular dependencies' };
+    }
+
+    // 4. Validate gate connections
+    const connectionValidation = this.validateGateConnections();
+    if (!connectionValidation.isValid) {
+      return connectionValidation;
+    }
+
+    // 5. Evaluate circuit logic
+    try {
+      this.circuitGraph = new CircuitGraph();
+      this.circuitGraph.buildGraph(this.connections);
+      this.circuitGraph.evaluateCircuit();
+      this.updateVisuals();
+
+      // 6. Check if all gates can be evaluated
+      const evaluationCheck = this.checkCircuitEvaluation();
+      if (!evaluationCheck.isValid) {
+        return evaluationCheck;
+      }
+
+      return { isValid: true, message: 'Circuit is valid and functioning correctly!' };
+    } catch (error) {
+      return { isValid: false, message: 'Circuit evaluation failed: ' + (error as Error).message };
+    }
+  }
+
+  private hasBasicCircuitStructure(): boolean {
+    const gateTypes = new Set<string>();
+    
+    // Check all gates in connections
+    this.connections.forEach(conn => {
+      if (conn.start) {
+        gateTypes.add(conn.start.getAttr('name'));
+      }
+      if (conn.end) {
+        gateTypes.add(conn.end.getAttr('name'));
+      }
+    });
+
+    // Must have at least one input source (One, Zero) and one output (LightBulb)
+    const hasInputs = gateTypes.has('One') || gateTypes.has('Zero');
+    const hasOutputs = gateTypes.has('LightBulb');
+    
+    return hasInputs && hasOutputs;
+  }
+
+  private isCircuitFullyConnected(): boolean {
+    if (this.connections.length === 0) return false;
+
+    const allGates = new Set<Gate>();
+    this.connections.forEach(conn => {
+      if (conn.start) allGates.add(conn.start);
+      if (conn.end) allGates.add(conn.end);
+    });
+
+    // Use BFS to check if all gates are reachable from any starting gate
+    const visited = new Set<Gate>();
+    const queue: Gate[] = [];
+    
+    // Start from the first gate
+    const firstGate = Array.from(allGates)[0];
+    queue.push(firstGate);
+    visited.add(firstGate);
+
+    while (queue.length > 0) {
+      const currentGate = queue.shift()!;
+      
+      // Find all connected gates
+      this.connections.forEach(conn => {
+        if (conn.start === currentGate && conn.end && !visited.has(conn.end)) {
+          visited.add(conn.end);
+          queue.push(conn.end);
+        }
+        if (conn.end === currentGate && conn.start && !visited.has(conn.start)) {
+          visited.add(conn.start);
+          queue.push(conn.start);
+        }
+      });
+    }
+
+    return visited.size === allGates.size;
+  }
+
+  private hasCircularDependencies(): boolean {
+    const visited = new Set<string>();
+    const recursionStack = new Set<string>();
+
+    const allGates = new Set<Gate>();
+    this.connections.forEach(conn => {
+      if (conn.start) allGates.add(conn.start);
+      if (conn.end) allGates.add(conn.end);
+    });
+
+    const hasCycle = (gate: Gate): boolean => {
+      const gateId = gate.id();
+      
+      if (recursionStack.has(gateId)) {
+        return true; // Back edge found, cycle detected
+      }
+      
+      if (visited.has(gateId)) {
+        return false; // Already processed
+      }
+
+      visited.add(gateId);
+      recursionStack.add(gateId);
+
+      // Check all outgoing connections
+      for (const conn of this.connections) {
+        if (conn.start === gate && conn.end) {
+          if (hasCycle(conn.end)) {
+            return true;
+          }
+        }
+      }
+
+      recursionStack.delete(gateId);
+      return false;
+    };
+
+    // Check for cycles starting from each unvisited gate
+    for (const gate of allGates) {
+      if (!visited.has(gate.id())) {
+        if (hasCycle(gate)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private validateGateConnections(): { isValid: boolean; message: string } {
+    for (const conn of this.connections) {
+      if (!conn.start || !conn.end) {
+        return { isValid: false, message: 'Invalid connection found: missing start or end gate' };
+      }
+
+      if (!conn.startCircle || !conn.endCircle) {
+        return { isValid: false, message: 'Invalid connection found: missing connection points' };
+      }
+
+      // Validate gate types can be connected
+      const startType = conn.start.getAttr('name');
+      const endType = conn.end.getAttr('name');
+
+      // Input gates (One, Zero) should only have outputs
+      if (startType === 'One' || startType === 'Zero') {
+        if (conn.startCircle.getAttr('circleType') !== 'output') {
+          return { isValid: false, message: `Input gate ${startType} can only provide output` };
+        }
+      }
+
+      // Output gates (LightBulb) should only have inputs
+      if (endType === 'LightBulb') {
+        if (conn.endCircle.getAttr('circleType') !== 'input') {
+          return { isValid: false, message: 'LightBulb can only receive input' };
+        }
+      }
+
+      // Logic gates should have proper input/output configuration
+      if (['AND', 'OR', 'NOT'].includes(endType)) {
+        if (conn.endCircle.getAttr('circleType') !== 'input') {
+          return { isValid: false, message: `Logic gate ${endType} connection must be to input` };
+        }
+      }
+    }
+
+    return { isValid: true, message: 'All connections are valid' };
+  }
+
+  private checkCircuitEvaluation(): { isValid: boolean; message: string } {
+    let unevaluatedGates = 0;
+    let totalGates = 0;
+
+    this.circuitGraph.nodes.forEach((node, id) => {
+      totalGates++;
+      if (node.outputValue === null) {
+        unevaluatedGates++;
+        console.warn(`Gate ${id} (${node.gate.getAttr('name')}) could not be evaluated`);
+      }
+    });
+
+    if (unevaluatedGates > 0) {
+      return { 
+        isValid: false, 
+        message: `${unevaluatedGates} out of ${totalGates} gates could not be evaluated. Check for missing inputs or circular dependencies.` 
+      };
+    }
+
+    return { isValid: true, message: 'All gates evaluated successfully' };
+  }
+
   async challengeCheckCircuit(question: string): Promise<boolean> {
     if (this.connections.length === 0) {
       return false;
@@ -783,10 +1267,9 @@ export class SimulatorCanvasComponent implements OnInit {
     const dataUrl = this.canvasStage.toDataURL({pixelRatio: 5});
     const link = document.createElement('a');
     link.href = dataUrl;
-    link.download = 'circuit.png';
+    link.download = `circuit_at_${new Date().toISOString()}.png`;
     link.click();
   }
-
 
   challengeDisableCanvas() {
     this.canvasLayer.getChildren().forEach(child => {

@@ -1,14 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
     <a class="navbar-brand" href="#">
-      <img src="/public/images/header_microchip.png" alt="LogicPulse Logo" width="30" height="24" class="d-inline-block align-text-top">
-      LogicPulse
+      <img src="/public/images/header_microchip.png" alt="LogicPulse Logo" width="30" height="30">
+      Logic Pulse
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
         </li>
@@ -22,7 +22,7 @@
           <a class="nav-link" routerLink="/simulator" routerLinkActive="active" (click)="closeMenu()">Simulator</a>
         </li>
       </ul>
-      <button class="btn btn-danger" *ngIf="isLoggedIn" (click)="logout(); closeMenu()">Logout</button>
+      <button class="btn-logout ms-lg-3" *ngIf="isLoggedIn" (click)="logout(); closeMenu()">Logout</button>
     </div>
   </div>
 </nav>

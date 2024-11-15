@@ -1,91 +1,262 @@
+.settings-container {
+  min-height: calc(100vh - 200px);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
 .settings-editor {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+.settings-card {
+  background-color: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
-.table-responsive {
-  overflow-x: auto;
+.settings-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  padding: var(--spacing-xl);
 }
 
-.settings-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+.settings-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
 }
 
-.settings-table th,
-.settings-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.settings-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-top: var(--spacing-xs);
 }
 
-.settings-table th {
-  background-color: #f8f9fa;
-  font-weight: bold;
-  color: #495057;
+.settings-body {
+  padding: var(--spacing-xl);
+}
+
+.settings-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.settings-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.setting-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--gray-50);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.setting-item:hover {
+  background-color: var(--gray-100);
+}
+
+.setting-label {
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.setting-description {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-top: var(--spacing-xs);
 }
 
 .form-control {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 16px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+  background-color: white;
 }
 
-.form-control[type="checkbox"] {
-  width: auto;
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.form-actions {
-  text-align: right;
+.form-control:hover {
+  border-color: var(--gray-300);
 }
 
-.btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 4px;
+.form-select {
   cursor: pointer;
 }
 
-.btn-primary {
-  background-color: #007bff;
+.form-checkbox {
+  width: auto;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--gray-300);
+  transition: var(--transition-base);
+  border-radius: var(--radius-full);
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: var(--transition-base);
+  border-radius: var(--radius-full);
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--gray-200);
+}
+
+.btn-save {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: var(--primary-color);
   color: white;
   border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.btn-save:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
-.btn-primary:disabled {
-  background-color: #6c757d;
+.btn-save:disabled {
+  background-color: var(--gray-300);
   cursor: not-allowed;
+  transform: none;
 }
 
-@media screen and (max-width: 600px) {
-  .settings-table {
-    font-size: 14px;
-  }
+.btn-cancel {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: transparent;
+  color: var(--gray-700);
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
 
-  .settings-table th,
-  .settings-table td {
-    padding: 8px;
-  }
+.btn-cancel:hover {
+  background-color: var(--gray-100);
+  border-color: var(--gray-400);
+}
 
-  .form-control {
-    font-size: 14px;
-  }
+.success-message {
+  background-color: var(--success-color);
+  color: white;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
 
-  .btn {
-    padding: 8px 16px;
-    font-size: 14px;
+.error-message {
+  background-color: var(--danger-color);
+  color: white;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .settings-header {
+    padding: var(--spacing-lg);
+  }
+  
+  .settings-title {
+    font-size: 1.5rem;
+  }
+  
+  .settings-body {
+    padding: var(--spacing-lg);
+  }
+  
+  .setting-item {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-save,
+  .btn-cancel {
+    width: 100%;
   }
 }
