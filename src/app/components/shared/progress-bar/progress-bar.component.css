@@ -1,0 +1,181 @@
+.progress-container {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.progress-label {
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--text-primary, #333);
+}
+
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar-background {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+  border-radius: 10px;
+  transition: width 0.6s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill.animated {
+  background: linear-gradient(
+    90deg,
+    var(--primary-color, #4caf50) 0%,
+    var(--primary-hover, #45a049) 50%,
+    var(--primary-color, #4caf50) 100%
+  );
+  background-size: 200% 100%;
+  animation: progressShimmer 2s ease-in-out infinite;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: progressGloss 2s ease-in-out infinite;
+}
+
+.progress-percentage {
+  font-weight: 600;
+  color: var(--text-primary, #333);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Progress steps for detailed view */
+.progress-steps {
+  margin-top: 8px;
+}
+
+.step-indicators {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.step-indicator.completed {
+  background-color: var(--primary-color, #4caf50);
+  transform: scale(1.2);
+}
+
+.step-indicator.current {
+  background-color: var(--primary-hover, #45a049);
+  transform: scale(1.4);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.step-indicator.current::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid var(--primary-color, #4caf50);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: ripple 1.5s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes progressShimmer {
+  0% { background-position: -200% 0; }
+  50% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes progressGloss {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1.4); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.8; }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0.2; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .progress-bar-wrapper {
+    gap: 8px;
+  }
+  
+  .progress-percentage {
+    min-width: 30px;
+    font-size: 0.8rem;
+  }
+  
+  .step-indicator {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .progress-label,
+  .progress-percentage {
+    color: var(--text-primary-dark, #fff);
+  }
+  
+  .progress-bar-background {
+    background-color: var(--background-secondary-dark, #424242) !important;
+  }
+  
+  .step-indicator {
+    background-color: var(--background-secondary-dark, #424242);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .progress-bar-background {
+    border: 1px solid #000;
+  }
+  
+  .progress-bar-fill {
+    border: 1px solid #000;
+  }
+  
+  .step-indicator {
+    border: 1px solid #000;
+  }
+}

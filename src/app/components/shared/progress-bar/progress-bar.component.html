@@ -1,0 +1,41 @@
+<div class="progress-container">
+  <!-- Label (optional) -->
+  <div *ngIf="showLabel && label" class="progress-label" [style.font-size]="textSize">
+    {{ label }}
+  </div>
+  
+  <!-- Progress bar container -->
+  <div class="progress-bar-wrapper">
+    <div 
+      class="progress-bar-background"
+      [style.height]="barHeight"
+      [style.background-color]="backgroundColor">
+      
+      <!-- Progress fill -->
+      <div 
+        class="progress-bar-fill"
+        [class.animated]="animated"
+        [style.width]="progressWidth"
+        [style.background-color]="progressColor"
+        [style.height]="barHeight">
+      </div>
+    </div>
+    
+    <!-- Percentage display (optional) -->
+    <div *ngIf="showPercentage" class="progress-percentage" [style.font-size]="textSize">
+      {{ displayProgress }}%
+    </div>
+  </div>
+
+  <!-- Progress steps indicator for tutorial sections -->
+  <div *ngIf="size === 'large'" class="progress-steps">
+    <div class="step-indicators">
+      <div 
+        *ngFor="let step of [].constructor(10); let i = index" 
+        class="step-indicator"
+        [class.completed]="(i + 1) * 10 <= displayProgress"
+        [class.current]="(i * 10) < displayProgress && ((i + 1) * 10) > displayProgress">
+      </div>
+    </div>
+  </div>
+</div>
