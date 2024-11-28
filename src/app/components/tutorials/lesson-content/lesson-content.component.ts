@@ -2,6 +2,8 @@ import {Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, S
 import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Lesson} from "../../../models/lesson.model";
 import {LessonsService} from "../../../services/lessons/lessons.service";
+import {ProgressService} from "../../../services/progress/progress.service";
+import {ProgressBarComponent} from "../../shared/progress-bar/progress-bar.component";
 
 @Component({
   selector: 'lesson-content',
@@ -9,14 +11,18 @@ import {LessonsService} from "../../../services/lessons/lessons.service";
   imports: [
     NgForOf,
     NgOptimizedImage,
-    NgIf
+    NgIf,
+    ProgressBarComponent
   ],
   templateUrl: './lesson-content.component.html',
   styleUrl: './lesson-content.component.css'
 })
 export class LessonContentComponent implements OnInit, OnChanges {
 
-  constructor(private lessonService: LessonsService) {
+  constructor(
+    private lessonService: LessonsService,
+    private progressService: ProgressService
+  ) {
   }
 
   @ViewChild('lessonTop', { static: true }) lessonTop!: ElementRef;
@@ -29,6 +35,7 @@ export class LessonContentComponent implements OnInit, OnChanges {
   imageLoaded: boolean[] = [];
   selectedImage: string | null = null;
   selectedImageIndex: number = 0;
+  lessonStartTime: number = 0;
 
   ngOnInit(): void {
     this.lessons = this.lessonService.getLessons();
@@ -47,6 +54,7 @@ export class LessonContentComponent implements OnInit, OnChanges {
     const lesson = this.lessonService.getLesson(code);
     this.currentLesson = !lesson ? this.lessons[0] : lesson;
     this.initializeImageStates();
+    this.lessonStartTime = Date.now();
   }
 
   private initializeImageStates(): void {
@@ -142,6 +150,33 @@ export class LessonContentComponent implements OnInit, OnChanges {
     if (this.selectedImageIndex > 0) {
       this.selectedImageIndex--;
       this.selectedImage = this.currentLesson.content.images[this.selectedImageIndex];
+    }
+  }
+
+  // Progress tracking methods
+  markLessonComplete(): void {
+    const timeSpent = Math.round((Date.now() - this.lessonStartTime) / 60000); // Convert to minutes
+    this.progressService.markLessonComplete(this.code, timeSpent);
+  }
+
+  markLessonIncomplete(): void {
+    this.progressService.markLessonIncomplete(this.code);
+  }
+
+  isLessonCompleted(): boolean {
+    return this.progressService.isLessonCompleted(this.code);
+  }
+
+  getSectionProgress(): number {
+    const allLessonCodes = this.lessons.map(lesson => lesson.code);
+    return this.progressService.getSectionProgress(allLessonCodes);
+  }
+
+  toggleLessonCompletion(): void {
+    if (this.isLessonCompleted()) {
+      this.markLessonIncomplete();
+    } else {
+      this.markLessonComplete();
     }
   }
 }

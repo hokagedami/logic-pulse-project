@@ -55,6 +55,130 @@
   letter-spacing: 1px;
 }
 
+.lesson-progress-badge {
+  background: rgba(255, 193, 7, 0.9);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.lesson-progress-badge.completed {
+  background: rgba(76, 175, 80, 0.9);
+  animation: completionPulse 0.6s ease-in-out;
+}
+
+.section-progress {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.lesson-completion {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.completion-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.completion-checkbox:hover {
+  opacity: 0.8;
+}
+
+.completion-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  margin-right: var(--spacing-md);
+  transition: all 0.3s ease;
+}
+
+.completion-checkbox:hover .checkmark {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.completion-input:checked ~ .checkmark {
+  background-color: rgba(76, 175, 80, 0.9);
+  border-color: rgba(76, 175, 80, 0.9);
+  animation: checkboxPulse 0.4s ease-in-out;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.completion-input:checked ~ .checkmark:after {
+  display: block;
+  animation: checkmarkSlide 0.3s ease-in-out 0.1s both;
+}
+
+.completion-text {
+  font-weight: 500;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.completion-input:checked ~ .completion-text {
+  color: rgba(76, 175, 80, 1);
+  text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+
+@keyframes completionPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); }
+  100% { transform: scale(1); }
+}
+
+@keyframes checkboxPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes checkmarkSlide {
+  0% { opacity: 0; transform: rotate(45deg) scale(0); }
+  100% { opacity: 1; transform: rotate(45deg) scale(1); }
+}
+
 .lesson-title {
   font-size: 2.25rem;
   font-weight: 700;

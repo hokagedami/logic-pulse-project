@@ -3,8 +3,34 @@
     <div class="lesson-meta">
       <span class="lesson-badge">📖 Lesson</span>
       <span class="lesson-code">{{currentLesson.code}}</span>
+      <span class="lesson-progress-badge" [class.completed]="isLessonCompleted()">
+        {{ isLessonCompleted() ? '✅ Completed' : '⏳ In Progress' }}
+      </span>
     </div>
     <h1 class="lesson-title">{{currentLesson.title}}</h1>
+    
+    <!-- Overall section progress -->
+    <div class="section-progress">
+      <app-progress-bar 
+        [progress]="getSectionProgress()" 
+        [showLabel]="true" 
+        label="Tutorial Section Progress"
+        size="medium">
+      </app-progress-bar>
+    </div>
+
+    <!-- Lesson completion checkbox -->
+    <div class="lesson-completion">
+      <label class="completion-checkbox">
+        <input 
+          type="checkbox" 
+          [checked]="isLessonCompleted()" 
+          (change)="toggleLessonCompletion()"
+          class="completion-input">
+        <span class="checkmark"></span>
+        <span class="completion-text">Mark this lesson as complete</span>
+      </label>
+    </div>
   </div>
 
   <div class="lesson-body">
