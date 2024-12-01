@@ -1,0 +1,62 @@
+<div class="statistics-dashboard">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h2 class="dashboard-title">📈 Learning Statistics</h2>
+      <p class="dashboard-subtitle">Track your progress and achievements</p>
+    </div>
+    <button class="refresh-btn" (click)="refresh()" title="Refresh statistics">
+      <span class="refresh-icon">🔄</span>
+    </button>
+  </div>
+
+  <!-- Progress Overview -->
+  <div class="progress-overview">
+    <div class="progress-level">
+      <div class="level-badge">{{ getProgressLevel() }}</div>
+      <div class="level-message">{{ getProgressMessage() }}</div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards Grid -->
+  <div class="statistics-grid">
+    <div 
+      *ngFor="let card of statisticCards; trackBy: trackByTitle" 
+      class="statistic-card"
+      [style.border-left-color]="card.color">
+      
+      <div class="card-header">
+        <div class="card-icon" [style.color]="card.color">{{ card.icon }}</div>
+        <div class="card-title">{{ card.title }}</div>
+      </div>
+      
+      <div class="card-value" [style.color]="card.color">{{ card.value }}</div>
+      <div class="card-description">{{ card.description }}</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <div class="actions-header">
+      <h3 class="actions-title">🚀 Quick Actions</h3>
+    </div>
+    <div class="actions-grid">
+      <button class="action-btn" [disabled]="userProgress.completedLessons === 0">
+        <span class="action-icon">📊</span>
+        <span class="action-text">View Detailed Report</span>
+      </button>
+      <button class="action-btn" [disabled]="userProgress.completedLessons === 0">
+        <span class="action-icon">🏆</span>
+        <span class="action-text">View Achievements</span>
+      </button>
+      <button class="action-btn">
+        <span class="action-icon">🎯</span>
+        <span class="action-text">Set Learning Goal</span>
+      </button>
+      <button class="action-btn" [disabled]="userProgress.completedLessons === 0">
+        <span class="action-icon">📤</span>
+        <span class="action-text">Export Progress</span>
+      </button>
+    </div>
+  </div>
+</div>
