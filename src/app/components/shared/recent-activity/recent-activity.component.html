@@ -1,0 +1,64 @@
+<div class="recent-activity" [class.compact]="compact">
+  <!-- Component Header -->
+  <div *ngIf="showTitle" class="activity-header">
+    <h3 class="activity-title">
+      <span class="title-icon">📝</span>
+      Recent Activity
+    </h3>
+    <button class="refresh-btn" (click)="refresh()" title="Refresh activity">
+      <span class="refresh-icon">🔄</span>
+    </button>
+  </div>
+
+  <!-- Activity List -->
+  <div class="activity-list" *ngIf="activities.length > 0; else noActivities">
+    <div 
+      *ngFor="let activity of activities; trackBy: trackByActivity" 
+      class="activity-item"
+      [attr.data-type]="activity.type">
+      
+      <!-- Activity Icon -->
+      <div class="activity-icon" [style.background-color]="activity.color">
+        <span class="icon-emoji">{{ activity.icon }}</span>
+      </div>
+      
+      <!-- Activity Content -->
+      <div class="activity-content">
+        <div class="activity-description">{{ activity.description }}</div>
+        
+        <div class="activity-meta">
+          <span class="activity-time">{{ getRelativeTime(activity.timestamp) }}</span>
+          <span *ngIf="activity.timeSpent && activity.timeSpent > 0" class="time-spent">
+            • {{ formatTime(activity.timeSpent) }}
+          </span>
+          <span *ngIf="activity.lessonCode" class="lesson-code">
+            • {{ activity.lessonCode.toUpperCase() }}
+          </span>
+        </div>
+      </div>
+      
+      <!-- Activity Timestamp -->
+      <div class="activity-timestamp" [title]="activity.timestamp | date:'medium'">
+        {{ activity.timestamp | date:'MMM d' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <ng-template #noActivities>
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title">No Recent Activity</div>
+      <div class="empty-description">
+        Start learning to see your recent progress and achievements here!
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Footer -->
+  <div *ngIf="activities.length >= maxItems" class="activity-footer">
+    <div class="footer-text">
+      Showing last {{ maxItems }} activities
+    </div>
+  </div>
+</div>

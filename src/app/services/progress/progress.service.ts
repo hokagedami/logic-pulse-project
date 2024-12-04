@@ -95,7 +95,7 @@ export class ProgressService {
   /**
    * Get overall user progress statistics
    */
-  getUserProgress(totalLessonsAvailable: number): UserProgress {
+  getUserProgress(totalLessonsAvailable: number = 10): UserProgress {
     const progressMap = this.progressSubject.value;
     const completedLessons = Array.from(progressMap.values()).filter(p => p.completed).length;
     const totalTimeSpent = Array.from(progressMap.values())
@@ -174,6 +174,13 @@ export class ProgressService {
     const timeSpent = lessonsCompleted * 5; // Assume 5 minutes per lesson on average
     
     return { lessonsCompleted, timeSpent };
+  }
+
+  /**
+   * Get completed lessons
+   */
+  getCompletedLessons(): LessonProgress[] {
+    return Array.from(this.progressSubject.value.values()).filter(progress => progress.completed);
   }
 
   /**
