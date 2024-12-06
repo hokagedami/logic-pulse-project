@@ -1,4 +1,4 @@
-# Logic Pulse - Interactive Logic Gate Learning Portal
+# Logic Pulse - Interactive Logic Gate Learning Portal 
 
 Logic Pulse is an open-source educational platform designed to teach digital logic fundamentals through interactive tutorials, challenges, and a visual circuit simulator. Built with Angular 18, it provides an engaging learning experience for students and enthusiasts exploring the world of logic gates and digital circuits.
 
