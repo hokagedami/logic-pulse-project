@@ -2,6 +2,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    min-height: calc(100vh - 200px);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+.challenge-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }

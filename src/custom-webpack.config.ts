@@ -1,11 +1,16 @@
 import type { Configuration } from 'webpack';
-import { EnvironmentPlugin } from 'webpack';
 import Dotenv from 'dotenv-webpack';
 
 const config: Configuration = {
   plugins: [
-    new Dotenv(),
-    new EnvironmentPlugin(['CLAUDE_API_KEY'])
+    new Dotenv({
+      systemvars: true,
+      silent: true,
+      defaults: false,
+      ignoreStub: true,
+      safe: false,
+      allowEmptyValues: true
+    })
   ]
 };
 

@@ -1,5 +1,41 @@
+/* Modern header styles */
+.navbar {
+  background-color: white !important;
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--spacing-md) 0;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  width: 100%;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-900) !important;
+  transition: transform var(--transition-base);
+}
+
+.navbar-brand:hover {
+  transform: translateX(2px);
+  color: var(--primary-color) !important;
+}
+
 .navbar-brand img {
-  margin-right: 8px;
+  margin-right: var(--spacing-sm);
+  filter: invert(40%) sepia(100%) saturate(1000%) hue-rotate(200deg);
+  transition: filter var(--transition-base);
+}
+
+.navbar-brand:hover img {
+  filter: invert(40%) sepia(100%) saturate(1500%) hue-rotate(200deg);
 }
 
 .navbar-nav {
@@ -7,31 +43,102 @@
 }
 
 .nav-item {
-  margin: 0 5px;
+  margin: 0 var(--spacing-xs);
 }
 
-.btn-danger {
-  padding: 8px 16px;
+.nav-link {
+  color: var(--gray-600) !important;
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--primary-color) !important;
+  background-color: var(--primary-light);
+}
+
+.nav-link.active {
+  color: var(--primary-color) !important;
+  background-color: var(--primary-light);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-sm);
+}
+
+.navbar-toggler {
+  border: none;
+  padding: var(--spacing-xs);
+  background-color: transparent;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(107, 114, 128, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.btn-logout {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.btn-logout:hover {
+  background-color: var(--danger-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 @media (max-width: 991px) {
-  .navbar-nav {
-    margin-top: 10px;
+  .navbar {
+    padding: var(--spacing-sm) 0;
+  }
+
+  .navbar-collapse {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1051;
   }
 
   .nav-item {
-    margin: 5px 0;
+    margin: var(--spacing-xs) 0;
   }
 
-  .btn-danger {
-    margin-top: 10px;
+  .nav-link {
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+  }
+
+  .nav-link.active::after {
+    display: none;
+  }
+
+  .btn-logout {
+    margin-top: var(--spacing-md);
     width: 100%;
-  }
-}
-
-/* Add this to ensure proper spacing in the collapsed menu */
-@media (max-width: 991px) {
-  .navbar-collapse {
-    padding-bottom: 10px;
   }
 }
