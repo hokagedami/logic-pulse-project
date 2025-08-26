@@ -38,7 +38,8 @@
       "Bash(git rev-list:*)",
       "Bash(gh search:*)",
       "Bash(python generate_commits:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "includeCoAuthoredBy": false

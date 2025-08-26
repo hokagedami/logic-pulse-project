@@ -74,7 +74,7 @@ def apply_commits():
             'git', 'commit', '-m', commit_data['message']
         ], env=env, check=True)
         
-        print(f"  ✓ {commit_data['message'][:50]}...")
+        print(f"  OK {commit_data['message'][:50]}...")
 
 if __name__ == "__main__":
     apply_commits()
