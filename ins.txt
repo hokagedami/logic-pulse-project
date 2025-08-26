@@ -1,0 +1,100 @@
+Instructions for AI Agent: Remove Contributor from GitHub Repository History
+
+Objective: Remove all commits by a specified contributor (identified by username, email, or name) from a GitHub repository’s history and ensure they no longer appear in the contributor list, while minimizing disruption.
+
+Inputs Required:
+- Repository URL (e.g., https://github.com/owner/repo.git)
+- Contributor details (GitHub username, email, or name used in commits)
+- Default branch name (e.g., main or master)
+
+Prerequisites:
+- Administrative access to the GitHub repository
+- Git installed (version 2.30+)
+- git filter-repo installed (see https://github.com/newren/git-filter-repo)
+- GitHub API credentials or web interface access
+- Secure environment for command execution and backups
+
+Steps:
+
+1. Validate Inputs and Permissions
+   - Verify repository URL is valid and accessible.
+   - Confirm admin access to the repository via GitHub API or web interface.
+   - Validate contributor details (username, email, or name).
+   - Log: "Validated repository URL: <URL>, admin access confirmed, contributor: <username/email/name>."
+
+2. Backup Repository
+   - Clone repository to a backup directory:
+     git clone <repository-url> backup-repo-2025-08-05-1736
+   - Verify backup by checking commit count:
+     cd backup-repo-2025-08-05-1736
+     git log --oneline | wc -l
+   - Log: "Backup created at backup-repo-2025-08-05-1736 with <N> commits."
+
+3. Clone Working Repository
+   - Clone repository to a working directory:
+     git clone <repository-url> working-repo
+     cd working-repo
+   - Log: "Working repository cloned to working-repo."
+
+4. Identify Contributor’s Commits
+   - Find commits by contributor:
+     git log --author="<contributor-username-or-email>" --pretty="%H %an %ae" > contributor-commits.txt
+   - If no commits found, try variations or search all commits:
+     git log --all --pretty="%H %an %ae" | grep "<partial-name-or-email>"
+   - If no commits exist, log: "No commits found for contributor <details>. Proceeding to cache refresh."
+   - Else, log: "Found <N> commits by contributor <details>."
+
+5. Remove Commits Using git filter-repo
+   - Run:
+     git filter-repo --commit-callback '
+       if commit.author_name == "<Contributor Name>" or commit.author_email == "<contributor@example.com>":
+         commit.skip()
+     '
+     Replace <Contributor Name> and <contributor@example.com> with details from Step 4.
+   - Verify commits removed:
+     git log --author="<contributor-username-or-email>"
+   - Log: "Removed <N> commits by contributor <details> using git filter-repo."
+
+6. Force Push Rewritten History
+   - Warn collaborators of force-push.
+   - Push changes:
+     git push --force origin <default-branch>
+   - Log: "Force-pushed rewritten history to origin/<default-branch>."
+
+7. Refresh GitHub Contributor List Cache
+   - Check contributor list at https://github.com/owner/repo/graphs/contributors.
+   - If contributor still appears, make a small commit:
+     echo "Cache refresh" >> README.md
+     git add README.md
+     git commit -m "Trigger contributor list cache refresh"
+     git push
+   - Alternatively, rename and revert default branch:
+     git branch -m <default-branch> temp
+     git push origin temp
+     git push origin --delete <default-branch>
+     git branch -m temp <default-branch>
+     git push origin <default-branch>
+   - Log: "Cache refresh triggered via commit or branch rename."
+
+8. Verify Contributor Removal
+   - Check contributor list via GitHub API or web interface.
+   - If contributor persists, contact GitHub Support at https://support.github.com/contact with repository details and request cache refresh.
+   - Log: "Contributor list checked. Contributor removed: <yes/no>. Support contacted: <yes/no>."
+
+9. Fallback: Create New Repository (if Step 5 fails or is too complex)
+   - Clone repository:
+     git clone <repository-url> temp-repo
+     cd temp-repo
+   - Remove Git history:
+     rm -rf .git
+   - Initialize new repository:
+     git init
+     git add -A
+     git commit -m "Initial commit"
+   - Create new GitHub repository via API or web interface.
+   - Push to new repository:
+     git remote add origin <new-repository-url>
+     git push -u origin <default-branch>
+   - Transfer settings (collaborators, branch protections) manually.
+   - Archive or delete old repository via GitHub web interface.
+   - Log: "New repository created at <new-repository-url>. Old repository archived/deleted."
