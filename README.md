@@ -121,6 +121,7 @@ This project is open source and available under the [MIT License](LICENSE).
 - Uses Konva.js for interactive canvas graphics
 - Includes Bootstrap for responsive design
 - Integrates with Anthropic's Claude AI for enhanced learning features
+- Community-driven development with contributions from multiple developers
 
 // Update 5044
 // Update 5978
